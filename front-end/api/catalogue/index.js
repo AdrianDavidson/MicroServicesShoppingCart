@@ -21,6 +21,19 @@
     helpers.simpleHttpRequest(x
      , res, next);
   });
+  // app.post('/newProduct', function(req, res) {
+  //   var x = endpoints.catalogueUrl+"/newProduct" ;//+ req.url.toString();
+  //   console.log("newProduct"+x);
+  //   helpers.simpleHttpRequest(x
+  //    , res);
+  // });
+
+  app.post('/newProduct',function(req,res){
+    var x = endpoints.catalogueUrl+"/newProduct" ;//+ req.url.toString();
+    console.log("newProduct"+ x);
+    helpers.simpleHttpRequest(x,req, res);
+    res.end("yes");
+  });
 
   app.get("/tags", function(req, res, next) {
     helpers.simpleHttpRequest(endpoints.tagsUrl, res, next);

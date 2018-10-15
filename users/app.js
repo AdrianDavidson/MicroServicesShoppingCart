@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var db = mysql.createConnection({
     host:     'localhost',
     user:     'root',
-    password: 'asdf1234',
+    password: '',
     database: 'shop'
 });
 var cart = [];

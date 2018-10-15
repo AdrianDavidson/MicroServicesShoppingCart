@@ -34,7 +34,7 @@ var server = http.createServer(function (request, response) {
 
             case "/newProduct":
             var body = '';
-            console.log("New Product ");
+            console.log("new Product");
             request.on('data', function (data) {
                 body += data;
             });
@@ -47,28 +47,32 @@ var server = http.createServer(function (request, response) {
                     'Access-Control-Allow-Origin': '*'
                 });
 
-                db.query(query,[],function(err, rows) {
+                db.query(
+                    query,
+                    [],
+                    function(err, rows) {
                         if (err) {
                             response.end("error");
                             throw err;
                         }
-                            query = "INSERT INTO products (productsID, name)"+
-                                    "VALUES(?, ?)";
-                            db.query(
-                                query,
-                                [obj.name,obj.password,obj.address],
-                                function(err, result) {
+                        if (rows!=null && rows.length>0) {
+                            console.log("Item already in DB");
+                            response.end('{"error": "2"}');
+                        }
+                            //query = "INSERT INTO products (name)"+ "VALUES(?)";
+                            var query = "INSERT INTO products (name) VALUES (?)";
+                            db.query( query,[obj.name],function(err, result) {
                                     if (err) {
                                         // 2 response is an sql error
                                         response.end('{"error": "3"}');
                                         throw err;
                                     }
                                     theuserid = result.insertId;
-                                    var obj = {
-                                        id: theuserid
-                                    }
+                                        var obj = {
+                                            id: theuserid
+                                        }
                                     response.end(JSON.stringify(obj));
-
+console.log("yay");
                                 }
                             );
                         
