@@ -31,6 +31,14 @@
   app.post('/newProduct',function(req,res){
     var x = endpoints.catalogueUrl+"/newProduct" ;//+ req.url.toString();
     console.log("newProduct"+ x);
+
+    var options = {
+      uri: x,
+      method: 'POST',
+      json: true,
+      body: req.body
+  };
+  
     helpers.simpleHttpRequest(x,req, res);
     res.end("yes");
   });
