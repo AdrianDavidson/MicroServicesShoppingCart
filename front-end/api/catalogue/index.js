@@ -28,19 +28,27 @@
   //    , res);
   // });
 
-  app.post('/newProduct',function(req,res){
+  app.post("/newProduct",function(req,res){
     var x = endpoints.catalogueUrl+"/newProduct" ;//+ req.url.toString();
-    console.log("newProduct"+ x);
+    console.log("----------> posting it here "+ x);
+    console.log("newProduct "+ x);
 
-    var options = {
-      uri: x,
-      method: 'POST',
-      json: true,
-      body: req.body
-  };
-  
-    helpers.simpleHttpRequest(x,req, res);
-    res.end("yes");
+      var options = {
+          uri: x,
+          method: 'POST',
+          json: true,
+          body: req.body
+      };
+      console.log("----------> Posting product: " + JSON.stringify(req.body));
+      request(options, function(error, response, body) {
+          if (error) {
+              return next(error);
+          }
+          helpers.respondSuccessBody(res, JSON.stringify(body));
+      }.bind({
+          res: res
+      }));
+
   });
 
   app.get("/tags", function(req, res, next) {

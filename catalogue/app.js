@@ -60,8 +60,15 @@ var server = http.createServer(function (request, response) {
                             response.end('{"error": "2"}');
                         }
                             //query = "INSERT INTO products (name)"+ "VALUES(?)";
-                            var query = "INSERT INTO products (name) VALUES (?)";
-                            db.query( query,[obj.name],function(err, result) {
+                            var query = "INSERT INTO products (name,quantity,price,image) VALUES (?,?,?,?)";
+                           var fd = $('#newProductForm').serialize();
+                            $.post("/newProduct",fd,function (data) 
+                            {console.log(data);
+                              $('#logonmessage').html(data);
+                            });
+
+                           
+                            db.query( query,[obj.name, obj.quantity, obj.price, obj.image],function(err, result) {
                                     if (err) {
                                         // 2 response is an sql error
                                         response.end('{"error": "3"}');
