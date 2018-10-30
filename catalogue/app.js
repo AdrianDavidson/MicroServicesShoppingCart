@@ -22,82 +22,36 @@ var theuserid =null;
 var server = http.createServer(function (request, response) {
     var path = url.parse(request.url).pathname;
     var url1 = url.parse(request.url);
+//  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//                                      Add new product
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     if (request.method == 'POST') {
         switch (path) {
-
-
-            // /* TODO */
-            // case "/newProduct":
-
-
-            //     break;
-
+            /* TODO */
             case "/newProduct":
-            var body = '';
-            console.log("new Product");
-            request.on('data', function (data) {
-                body += data;
-            });
-
-            request.on('end', function () {
-                var obj = JSON.parse(body);
-                console.log(JSON.stringify(obj, null, 2));
-                //var query = "SELECT * FROM Customer where name='"+obj.name+"'";
-                response.writeHead(200, {
-                    'Access-Control-Allow-Origin': '*'
+              var body = '';
+               request.on('data', function (data) {
+                    body += data;
                 });
-
-                db.query(
-                    query,
-                    [],
-                    function(err, rows) {
-                        if (err) {
-                            response.end("error");
-                            throw err;
-                        }
-                        if (rows!=null && rows.length>0) {
-                            console.log("Item already in DB");
-                            response.end('{"error": "2"}');
-                        }
-                            //query = "INSERT INTO products (name)"+ "VALUES(?)";
-                            var query = "INSERT INTO products (name,quantity,price,image) VALUES (?,?,?,?)";
-                           var fd = $('#newProductForm').serialize();
-                            $.post("/newProduct",fd,function (data) 
-                            {console.log(data);
-                              $('#logonmessage').html(data);
-                            });
-
-                           
-                            db.query( query,[obj.name, obj.quantity, obj.price, obj.image],function(err, result) {
-                                    if (err) {
-                                        // 2 response is an sql error
-                                        response.end('{"error": "3"}');
-                                        throw err;
-                                    }
-                                    theuserid = result.insertId;
-                                        var obj = {
-                                            id: theuserid
-                                        }
-                                    response.end(JSON.stringify(obj));
-console.log("yay");
-                                }
-                            );
-                        
-
+              request.on('end', function () {
+                var products = qs.parse(body);
+                var query = "INSERT INTO products (name, quantity, price, image) VALUES ('"
+                +products.name
+                    +"','"+products.quantity
+                        +"','"+products.price
+                        +"','"+products.img+"' );";
+                db.query(query,[],function(err, rows) 
+                    {
+                        if (err) throw err;
                     }
                 );
-
-
-            });
-
-
-            break;
-        } //switch
+              });
+        }
     }
     else {
         switch (path) {
-
-
+            
             case "/getProducts"    :
                 console.log("getProducts");
                 response.writeHead(200, {

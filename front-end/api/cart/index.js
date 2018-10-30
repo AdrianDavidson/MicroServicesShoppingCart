@@ -48,22 +48,39 @@
       helpers.respondStatusBody(res, response.statusCode, body)
     });
   });
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//                      Deletes
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  app.post("/delete", function (req, res, next) {
 
-  // Delete cart
-  app.delete("/cart", function (req, res, next) {
     var custId = helpers.getCustomerId(req, app.get("env"));
-    console.log('Attempting to delete cart for user: ' + custId);
-    var options = {
-      uri: endpoints.cartsUrl + "/" + custId,
-      method: 'DELETE'
-    };
-    request(options, function (error, response, body) {
-      if (error) {
-        return next(error);
-      }
-      console.log('User cart deleted with status: ' + response.statusCode);
-      helpers.respondStatus(res, response.statusCode);
-    });
+    var body = "";
+
+    req.on('data', function (data) {
+         body += data;
+     });
+
+     req.on('end', function () {
+       var id = body.slice(4);
+       var options = {
+           uri: endpoints.cartsUrl 
+           + "/cart/" 
+             + custId 
+              + "/items/" 
+                + id.toString(),
+           method: 'DELETE'
+         };
+
+         request(options, function (error, response, body) {
+           if (error) {
+             return next(error);
+           }
+     // helpers.respondStatus(res, response.statusCode);
+       
+          });
+     });
+    console.log("Delete item from cart: " + req.url);
+    res.send("true");
   });
 
   // Delete item from cart

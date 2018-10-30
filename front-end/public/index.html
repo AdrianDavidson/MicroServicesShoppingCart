@@ -53,10 +53,18 @@
         tr:nth-child(even) {
             background-color: #dddddd;
         }
+        #total{
+            font-size: 50px;
+            font-family: 'Dancing Script', cursive;
+            color: crimson;
+            text-align: center;
+
+        }
     </style>
 
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
 
     <script type="text/javascript" language="javascript">
         var headers = [
@@ -190,7 +198,9 @@
             }
             out += "</table>";
             document.getElementById(name).innerHTML = out;
+            // console.log(products[i].name);
         }
+
 
         function displayCart(cart, name) {
             var out = "<h1> Shopping Cart</h1><table border=1 width=100%>";
@@ -217,7 +227,9 @@
             }
             out += "</table>";
             out += "<br>";
-            out += "Total: "+total +'<br>';
+            out += "<div id = total>";
+            out += "Your total is currently: "+total +'<br>';
+            out += "</div>";
             out += '<button onclick="checkout()">Checkout</button><br>';
             out+='<div id="cartmessage"></div>';
             document.getElementById(name).innerHTML = out;
@@ -392,14 +404,14 @@
                         <input type="text" name="name" value="">
                         <br>
                         Quantity:<br>
-                        <input type="text" name="Quantity" value="">
+                        <input type="text" name="quantity" value="">
                         <br>
                         Price:<br>
-                        <input type="text" name="Price" value="">
-                        <br>
+                        <input type="text" name="price" value="">
+                        <!-- <br>
                         Image URL:<br>
                         <input type="text" name="Image_URL" value="">
-                        <br>
+                        <br> -->
                         <input type="submit">
                     </form>
         </div>

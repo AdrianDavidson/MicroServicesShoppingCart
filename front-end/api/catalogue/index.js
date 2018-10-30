@@ -28,28 +28,25 @@
   //    , res);
   // });
 
-  app.post("/newProduct",function(req,res){
-    var x = endpoints.catalogueUrl+"/newProduct" ;//+ req.url.toString();
-    console.log("----------> posting it here "+ x);
-    console.log("newProduct "+ x);
-
-      var options = {
-          uri: x,
-          method: 'POST',
-          json: true,
-          body: req.body
-      };
-      console.log("----------> Posting product: " + JSON.stringify(req.body));
-      request(options, function(error, response, body) {
-          if (error) {
-              return next(error);
-          }
-          helpers.respondSuccessBody(res, JSON.stringify(body));
-      }.bind({
-          res: res
-      }));
-
-  });
+    app.post("/newProduct", function(req, res) {
+      var body = '';
+      req.on('data', function (data) {
+        body += data;
+      });
+      req.on('end', function () {
+        var options = {
+            uri: endpoints.newProductUrl+"/newProduct",
+            method: 'POST',
+            json: true,
+            body: body
+        };
+        request(options, function(res) {
+            req.on('data', function (data) {
+            });
+         });
+      });
+      res.send("the new product has been updated");
+    });
 
   app.get("/tags", function(req, res, next) {
     helpers.simpleHttpRequest(endpoints.tagsUrl, res, next);

@@ -13,34 +13,65 @@ app.use(bodyParser.json());
 //app.use(morgan("dev", {}));
 var cart = [];
 
-app.post("/add", function (req, res, next) {
+//  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//                                      Check for double cart entries
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+var itemIsDouble;
+
+var myProdID = [];
+var doubledItemID;
+
+app.post("/add", function (req, res, next) 
+{
     var obj = req.body;
-    console.log("add ");
+    itemIsDouble = false;
     console.log("Attempting to add to cart: " + JSON.stringify(req.body));
+    for (var i = 0; i < myProdID.length; i++) 
+    {
+      if(myProdID[i] == obj.productID)
+      {
+        itemIsDouble = true;
+        doubledItemID = obj.productID;
+      }
+    }
 
+    if(itemIsDouble != true)
+    {
+      myProdID.push(obj.productID);
+      console.log(myProdID);
+      
+      var max = 0;
+      var ind = 0;
+      if (cart["" + obj.custId] === undefined)
+          cart["" + obj.custId] = [];
+      var c = cart["" + obj.custId];
+      for (ind = 0; ind < c.length; ind++)
+          if (max < c[ind].cartid)
+              max = c[ind].cartid;
+      var cartid = max + 1;
+      
+      var data = {
+          "cartid": cartid,
+          "productID": obj.productID,
+          "name": obj.name,
+          "price": obj.price,
+          "image": obj.image,
+          "quantity": obj.quantity
+      };
+      console.log(JSON.stringify(data));
+      c.push(data);
+    }
+        else{
+        x = cart["" + obj.custId];
+        for (var i = 0; i < x.length; i++) {
+            if(x[i].productID == doubledItemID){
+            console.log("Found It:");
+            x[i].quantity = parseInt(obj.quantity) + parseInt(x[i].quantity) ;
+            }
+        }
+        }
 
-    //  var obj = JSON.parse(body);
-
-    //       console.log('addToCart id '+id)
-    var max = 0;
-    var ind = 0;
-    if (cart["" + obj.custId] === undefined)
-        cart["" + obj.custId] = [];
-    var c = cart["" + obj.custId];
-    for (ind = 0; ind < c.length; ind++)
-        if (max < c[ind].cartid)
-            max = c[ind].cartid;
-    var cartid = max + 1;
-    var data = {
-        "cartid": cartid,
-        "productID": obj.productID,
-        "name": obj.name,
-        "price": obj.price,
-        "image": obj.image,
-        "quantity": obj.quantity
-    };
-    console.log(JSON.stringify(data));
-    c.push(data);
 
     res.status(201);
 
@@ -49,20 +80,23 @@ app.post("/add", function (req, res, next) {
 
 });
 
-/* toDO */
-app.delete("/cart/:custId/items/:id", function (req, res, next) {
-    var body = '';
-    console.log("Delete item from cart: for custId " + req.url + ' ' +
-        req.params.id.toString());
-    console.log("delete ");
+//  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//                                     Delete product from cart
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
-
-
-    res.send(' ');
-
-
+app.delete("/cart/:custId/items/:id", function (req, res, next) 
+{
+    x = cart["" + req.params.custId.toString()];
+    
+    for (var i = 0; i < x.length; i++) 
+    {
+      if(x[i].productID == req.params.id.toString())
+      {
+        x.splice(i,1);
+        myProdID.splice(i,1);
+      }
+    }
+    res.send('item deleted');
 });
 
 
